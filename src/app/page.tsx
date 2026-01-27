@@ -1984,7 +1984,7 @@ const DietChart = () => {
           </div>
         </motion.div>
       </motion.div>
-      );    );
+      );
 };
 
 
