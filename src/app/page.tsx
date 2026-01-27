@@ -1895,73 +1895,96 @@ const DietChart = () => {
         <motion.div
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}
-          className="bg-[#111] w-full max-w-sm rounded-[40px] overflow-hidden border border-white/10 shadow-2xl"
+          className="bg-[#111] w-full max-w-sm rounded-[40px] overflow-hidden border border-white/10 shadow-2xl relative"
         >
-          <div className="p-8 text-center space-y-6">
+          {/* Connection Animation Ring */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#BBF246]/5 blur-3xl rounded-full pointer-events-none" />
+
+          <div className="p-8 text-center space-y-8 relative z-10">
             <div className="relative flex justify-center">
-              <div className="absolute inset-0 bg-[#BBF246]/10 blur-3xl rounded-full" />
-              <div className={`p-6 rounded-full bg-white/5 border border-white/10 relative transition-transform duration-500 ${isConnecting ? 'animate-pulse' : ''}`}>
-                <Watch className={isConnected ? 'text-[#BBF246]' : 'text-white'} size={48} />
+              <div className={`p-8 rounded-full bg-gradient-to-br from-white/10 to-transparent border border-white/10 relative transition-all duration-1000 ${isConnecting ? 'shadow-[0_0_50px_rgba(187,242,70,0.2)]' : ''}`}>
+                <Watch className={isConnected ? 'text-[#BBF246]' : 'text-white'} size={56} strokeWidth={1.5} />
+
+                {isConnected && (
+                  <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1.2, opacity: 0 }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="absolute inset-0 rounded-full border border-[#BBF246] z-0"
+                  />
+                )}
               </div>
+
               {isConnecting && (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                >
-                  <Bluetooth size={80} className="text-[#BBF246]/20" />
-                </motion.div>
+                <svg className="absolute inset-0 w-full h-full -rotate-90 scale-150 pointer-events-none">
+                  <circle cx="50%" cy="50%" r="40" stroke="#BBF246" strokeWidth="2" fill="none" strokeDasharray="251" strokeDashoffset="251" strokeLinecap="round">
+                    <animate attributeName="stroke-dashoffset" from="251" to="0" dur="2s" fill="freeze" />
+                  </circle>
+                </svg>
               )}
             </div>
 
-            <div className="space-y-2">
-              <h2 className="text-2xl font-black italic uppercase tracking-tighter">
-                {isConnected ? 'CONNECTED' : isConnecting ? 'DISCOVERING...' : 'SYNC SMARTWATCH'}
+            <div className="space-y-3">
+              <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">
+                {isConnected ? 'DEVICE PAIRED' : isConnecting ? 'SEARCHING...' : 'SYNC DEVICE'}
               </h2>
-              <p className="text-xs text-[#8e8e93] leading-relaxed">
+              <p className="text-sm text-[#8e8e93] leading-relaxed">
                 {isConnected
-                  ? 'System paired with Ultra Pro 2. Heart rate and biometric data now syncing in real-time.'
-                  : 'Ensure Bluetooth is active on your device. We support Apple Watch, Garmin, and WearOS platforms.'}
+                  ? 'Reading biometric data from your Smart Band. Live heart rate monitoring active.'
+                  : 'Turn on Bluetooth on your device. We support Apple Watch, Garmin, and Fitbit.'}
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 pt-4">
-              <div className="bg-white/5 p-4 rounded-3xl border border-white/5">
-                <p className="text-[8px] font-black text-[#444] uppercase tracking-[0.2em] mb-1">Signal Status</p>
-                <p className={`font-bold text-xs ${isConnected ? 'text-green-500' : 'text-[#8e8e93]'}`}>
-                  {isConnected ? 'Strong' : 'Idle'}
-                </p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className={`p-4 rounded-3xl border ${isConnected ? 'bg-[#BBF246]/10 border-[#BBF246]/30' : 'bg-white/5 border-white/5'}`}>
+                <p className="text-[9px] font-black uppercase tracking-widest mb-1 opacity-60">Status</p>
+                <div className="flex items-center justify-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-[#BBF246] animate-pulse' : 'bg-[#444]'}`} />
+                  <span className={`font-bold text-sm ${isConnected ? 'text-white' : 'text-[#666]'}`}>
+                    {isConnected ? 'Online' : 'Offline'}
+                  </span>
+                </div>
               </div>
-              <div className="bg-white/5 p-4 rounded-3xl border border-white/5">
-                <p className="text-[8px] font-black text-[#444] uppercase tracking-[0.2em] mb-1">Auto-Sync</p>
-                <p className="font-bold text-xs text-[#BBF246]">Enabled</p>
+              <div className={`p-4 rounded-3xl border ${isConnected ? 'bg-[#BBF246]/10 border-[#BBF246]/30' : 'bg-white/5 border-white/5'}`}>
+                <p className="text-[9px] font-black uppercase tracking-widest mb-1 opacity-60">Battery</p>
+                <div className="flex items-center justify-center gap-2">
+                  <span className={`font-bold text-sm ${isConnected ? 'text-white' : 'text-[#666]'}`}>
+                    {isConnected ? '84%' : '--'}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <footer className="pt-6 flex flex-col gap-3">
+            <footer className="pt-4 flex flex-col gap-3">
               {!isConnected ? (
                 <Button
-                  className="w-full h-14 rounded-2xl"
+                  className="w-full h-16 rounded-2xl text-lg relative overflow-hidden group"
                   onClick={handleConnect}
                   disabled={isConnecting}
                 >
-                  {isConnecting ? 'PAIRING...' : 'SEARCH DEVICES'}
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Bluetooth size={20} />
+                    {isConnecting ? 'CONNECTING...' : 'CONNECT NOW'}
+                  </span>
                 </Button>
               ) : (
                 <Button
                   variant="secondary"
-                  className="w-full h-14 rounded-2xl"
+                  className="w-full h-16 rounded-2xl text-lg text-red-500 hover:bg-red-500/10 hover:border-red-500/30"
                   onClick={onConnect}
                 >
-                  DISCONNECT DEVICE
+                  DISCONNECT
                 </Button>
               )}
-              <Button variant="ghost" className="text-[10px]" onClick={onClose}>BACK TO DASHBOARD</Button>
+              <button onClick={onClose} className="text-xs font-bold text-[#666] hover:text-white transition-colors py-2 uppercase tracking-widest">
+                Cancel
+              </button>
             </footer>
           </div>
         </motion.div>
       </motion.div>
-      );
+      );    );
 };
 
 
