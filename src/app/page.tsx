@@ -57,8 +57,8 @@ const NeonButton = ({ children, className, onClick, variant = 'primary', ...prop
     whileTap={{ scale: 0.95 }}
     onClick={onClick}
     className={`relative px-6 py-4 rounded-2xl font-black uppercase tracking-wider flex items-center justify-center gap-2 overflow-hidden transition-all ${variant === 'primary'
-        ? `text-black bg-[${NEON_LIME}]`
-        : 'text-white bg-white/5 border border-white/10 hover:bg-white/10'
+      ? `text-black bg-[${NEON_LIME}]`
+      : 'text-white bg-white/5 border border-white/10 hover:bg-white/10'
       } ${className}`}
     style={variant === 'primary' ? { backgroundColor: NEON_LIME } : {}}
     {...props}
@@ -77,9 +77,172 @@ interface ProgressPhoto { id: string; date: string; url: string; }
 interface UserProfile { name: string; email: string; phone: string; height: string; weight: string; avatar: string; publicProfile: boolean; notifications: boolean; }
 
 const EXERCISES = [
-  { name: 'Plank', cat: 'Core', lvl: 'Beginner', image: 'https://images.unsplash.com/photo-1548691905-57c36cc8d93f?auto=format&fit=crop&q=80&w=600', videoUrl: 'https://www.youtube.com/embed/pSHjTRCQxIw', muscles: ['Abs', 'Obliques'], benefits: 'Core stability.' },
-  { name: 'Squats', cat: 'Legs', lvl: 'Beginner', image: 'https://images.unsplash.com/photo-1574680676118-05f2a1395c83?auto=format&fit=crop&q=80&w=600', videoUrl: 'https://www.youtube.com/embed/aclHkVaku9U', muscles: ['Quads', 'Glutes'], benefits: 'Leg strength.' },
-  { name: 'Push Ups', cat: 'Chest', lvl: 'Beginner', image: 'https://images.unsplash.com/photo-1571019623533-312984950ca0?auto=format&fit=crop&q=80&w=600', videoUrl: 'https://www.youtube.com/embed/IODxDxX7oi4', muscles: ['Chest', 'Triceps'], benefits: 'Upper body power.' },
+  {
+    name: 'Plank',
+    cat: 'Core',
+    lvl: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1548691905-57c36cc8d93f?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/ASdvN_XEl_c', // Plank Tutorial
+    muscles: ['Rectus Abdominis', 'Obliques', 'Transverse Abdominis'],
+    benefits: 'Essential for core stability, preventing lower back pain, and overall static strength.'
+  },
+  {
+    name: 'Bodyweight Squats',
+    cat: 'Legs',
+    lvl: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1574680676118-05f2a1395c83?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/YaXPRqUwItQ', // Squat Tutorial
+    muscles: ['Quadriceps', 'Gluteus Maximus'],
+    benefits: 'Great for warming up the lower body and improving hip mobility.'
+  },
+  {
+    name: 'Glute Bridges',
+    cat: 'Core',
+    lvl: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1434608519344-49d77a699e1d?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/8bbE64NuDSU', // Glute Bridge
+    muscles: ['Gluteus Maximus', 'Hamstrings'],
+    benefits: 'Activates the posterior chain and improves hip extension power.'
+  },
+  {
+    name: 'Push Ups',
+    cat: 'Chest',
+    lvl: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1571019623533-312984950ca0?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/IODxDxX7oi4', // Push Up
+    muscles: ['Pectorals', 'Triceps', 'Anterior Deltoids'],
+    benefits: 'The fundamental upper body pushing exercise. Builds foundational strength.'
+  },
+  {
+    name: 'Cat-Cow Stretch',
+    cat: 'Mobility',
+    lvl: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1552196564-972d3f939037?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/w_U0S9fV8P8',
+    muscles: ['Spine', 'Erector Spinae'],
+    benefits: 'Improves spinal flexibility and relieves tension in the back.'
+  },
+  {
+    name: 'Bird-Dog',
+    cat: 'Core',
+    lvl: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/wiFNA3sqjCA',
+    muscles: ['Core', 'Glutes', 'Lower Back'],
+    benefits: 'Excellent for stability, coordination, and strengthening the spinal extensors.'
+  },
+  {
+    name: 'Dead Hang',
+    cat: 'Mobility',
+    lvl: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/iQ5sY_Iez2I',
+    muscles: ['Shoulders', 'Forearms', 'Lats'],
+    benefits: 'Decompresses the spine and builds massive grip strength and shoulder health.'
+  },
+  {
+    name: 'Bench Press (Barbell)',
+    cat: 'Chest',
+    lvl: 'Intermediate',
+    image: 'https://images.unsplash.com/photo-1541534741688-6078c64b52d2?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/rT7DgCr-3pg',
+    muscles: ['Pectoralis Major', 'Triceps Brachii', 'Anterior Deltoid'],
+    benefits: 'The ultimate upper body strength movement, essential for building chest mass and pushing power.'
+  },
+  {
+    name: 'Deadlift (Conventional)',
+    cat: 'Back',
+    lvl: 'Advanced',
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/Opz7aZ-kdTk',
+    muscles: ['Erector Spinae', 'Gluteus Maximus', 'Hamstrings', 'Trapezius'],
+    benefits: 'The king of posterior chain exercises. Builds total-body raw strength and spinal stability.'
+  },
+  {
+    name: 'Squat (High Bar)',
+    cat: 'Legs',
+    lvl: 'Intermediate',
+    image: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/i7J5h7BJ07g',
+    muscles: ['Quadriceps', 'Gluteus Maximus', 'Adductors'],
+    benefits: 'Crucial for lower body development, functional power, and increasing metabolic demand.'
+  },
+  {
+    name: 'Pull Ups',
+    cat: 'Back',
+    lvl: 'Intermediate',
+    image: 'https://images.unsplash.com/photo-1598971639058-aba00366601b?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/eGo4IYlbE5g',
+    muscles: ['Latissimus Dorsi', 'Biceps Brachii', 'Rhomboids'],
+    benefits: 'The primary movement for back width (V-taper) and incredible functional upper body strength.'
+  },
+  {
+    name: 'Overhead Press',
+    cat: 'Shoulders',
+    lvl: 'Intermediate',
+    image: 'https://images.unsplash.com/photo-1532384661798-58b53a4fbe37?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/2yjaw54vxLA',
+    muscles: ['Deltoids', 'Triceps', 'Upper Traps'],
+    benefits: 'Excellent for shoulder health and strength, and building a thick, powerful upper frame.'
+  },
+  {
+    name: 'Bicep Curls (Dumbbell)',
+    cat: 'Arms',
+    lvl: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/ykJgrLQ9T24',
+    muscles: ['Biceps Brachii', 'Brachialis'],
+    benefits: 'Targeted isolation for bicep peaks and arm thickness.'
+  },
+  {
+    name: 'Tricep Pushdowns',
+    cat: 'Arms',
+    lvl: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80&w=600',
+    videoUrl: 'https://www.youtube.com/embed/2-LAMpZbaNI',
+    muscles: ['Triceps Brachii'],
+    benefits: 'Isolates the triceps for that "horshoe" look and improves elbow stability for pressing.'
+  }
+];
+
+const ROUTINES = [
+  {
+    name: 'Daily Essentials (Warmup)',
+    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800',
+    exercises: [
+      { name: 'Plank', category: 'Core', image: 'https://images.unsplash.com/photo-1548691905-57c36cc8d93f?auto=format&fit=crop&q=80&w=400' },
+      { name: 'Bodyweight Squats', category: 'Legs', image: 'https://images.unsplash.com/photo-1574680676118-05f2a1395c83?auto=format&fit=crop&q=80&w=400' },
+      { name: 'Glute Bridges', category: 'Glutes', image: 'https://images.unsplash.com/photo-1434608519344-49d77a699e1d?auto=format&fit=crop&q=80&w=400' },
+      { name: 'Push Ups', category: 'Chest', image: 'https://images.unsplash.com/photo-1571019623533-312984950ca0?auto=format&fit=crop&q=80&w=400' }
+    ]
+  },
+  {
+    name: 'Mobility & Prep',
+    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800',
+    exercises: [
+      { name: 'Cat-Cow Stretch', category: 'Mobility', image: 'https://images.unsplash.com/photo-1552196564-972d3f939037?auto=format&fit=crop&q=80&w=400' },
+      { name: 'Bird-Dog', category: 'Core/Balance', image: 'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&q=80&w=400' },
+      { name: 'Dead Hang', category: 'Shoulders', image: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?auto=format&fit=crop&q=80&w=400' }
+    ]
+  },
+  {
+    name: 'Push (Hypertrophy)',
+    image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&q=80&w=800',
+    exercises: [
+      { name: 'Bench Press', category: 'Chest', image: 'https://images.unsplash.com/photo-1541534741688-6078c64b52d2?auto=format&fit=crop&q=80&w=400' },
+      { name: 'Overhead Press', category: 'Shoulders', image: 'https://images.unsplash.com/photo-1532384661798-58b53a4fbe37?auto=format&fit=crop&q=80&w=400' },
+      { name: 'Tricep Pushdowns', category: 'Arms', image: 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80&w=400' }
+    ]
+  },
+  {
+    name: 'Leg Day (Raw Strength)',
+    image: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&q=80&w=800',
+    exercises: [
+      { name: 'Squats', category: 'Legs', image: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&q=80&w=400' },
+      { name: 'Deadlifts', category: 'Back/Legs', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=400' },
+      { name: 'Lunges', category: 'Legs', image: 'https://images.unsplash.com/photo-1434682841983-26829b10953d?auto=format&fit=crop&q=80&w=400' }
+    ]
+  }
 ];
 
 const DIET_PLAN = [{ day: "Day 1", label: "Mon", meals: { breakfast: "Oats & Berries", lunch: "Grilled Chicken Salad", dinner: "Quinoa Bowl" } }];
@@ -89,22 +252,45 @@ const DIET_PLAN = [{ day: "Day 1", label: "Mon", meals: { breakfast: "Oats & Ber
 const Dashboard = ({ userName, streak, timerSeconds, isTimerActive, heartRate, isWatchConnected, onConnectWatch, onStartWorkout, onOpenProgress }: any) => {
   const formatTime = (total: number) => `${Math.floor(total / 60).toString().padStart(2, '0')}:${(total % 60).toString().padStart(2, '0')}`;
 
+  const [greeting, setGreeting] = useState('');
+  const [quote, setQuote] = useState('');
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting('Good Morning');
+    else if (hour < 18) setGreeting('Good Afternoon');
+    else setGreeting('Time to Grind');
+
+    const quotes = [
+      "Sweat is just fat crying.",
+      "Your only limit is you.",
+      "Don't stop when you're tired. Stop when you're done.",
+      "Pain is temporary. Pride is forever.",
+      "Light weight, baby!"
+    ];
+    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+  }, []);
+
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-32">
       {/* Header */}
-      <header className="flex justify-between items-center">
+      <header className="flex justify-between items-start">
         <div>
-          <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">
-            FIT<span style={{ color: NEON_LIME }}>FORGE</span>
+          <p className="text-[#BBF246] text-[10px] font-black tracking-widest uppercase mb-1 flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[#BBF246] animate-pulse" /> ONLINE • KOCHI, INDIA
+          </p>
+          <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic leading-none">
+            {greeting}, <br />{userName}
           </h1>
-          <p className="text-[#8e8e93] text-xs font-bold tracking-widest uppercase mt-1">
-            Welcome back, {userName}
+          <p className="text-[#8e8e93] text-xs font-medium mt-2 max-w-[200px] leading-relaxed">
+            "{quote}"
           </p>
         </div>
         <button onClick={onOpenProgress} className="relative group">
-          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#BBF246] transition-all">
+          <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#BBF246] transition-all relative">
             <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=200" alt="Profile" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
           </div>
+          <div className="absolute -bottom-1 -right-1 bg-[#BBF246] text-black text-[8px] font-black px-2 py-0.5 rounded-full border border-black">PREMIUM</div>
         </button>
       </header>
 
@@ -240,6 +426,132 @@ const ExerciseLibrary = () => {
   );
 };
 
+const History = () => {
+  const historyData = [
+    { id: '1', name: 'Full Body Crush', date: 'Today, 9:00 AM', duration: '45m', calories: 320, volume: 12400 },
+    { id: '2', name: 'Upper Body Power', date: 'Yesterday', duration: '55m', calories: 410, volume: 15600 },
+    { id: '3', name: 'Leg Day Survival', date: 'Jan 26', duration: '60m', calories: 500, volume: 18200 },
+    { id: '4', name: 'Active Recovery', date: 'Jan 24', duration: '30m', calories: 150, volume: 0 },
+  ];
+
+  return (
+    <div className="space-y-6 pb-24">
+      <header>
+        <h1 className="text-3xl font-black uppercase italic">Workout <span style={{ color: NEON_LIME }}>History</span></h1>
+      </header>
+
+      <div className="space-y-4">
+        {historyData.map((session) => (
+          <GlassCard key={session.id} className="p-5 flex justify-between items-center group cursor-pointer hover:bg-white/5">
+            <div className="flex gap-4 items-center">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 text-[#8e8e93] group-hover:text-black group-hover:bg-[${NEON_LIME}] transition-all`}>
+                <HistoryIcon size={20} />
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-lg">{session.name}</h3>
+                <p className="text-xs text-[#8e8e93]">{session.date} • {session.duration}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-lg font-black text-white">{session.volume > 0 ? `${(session.volume / 1000).toFixed(1)}k` : '--'}</p>
+              <p className="text-[10px] text-[#8e8e93] uppercase tracking-wider">VOL (KG)</p>
+            </div>
+          </GlassCard>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Profile = ({ userProfile, onUpdateProfile }: { userProfile: UserProfile, onUpdateProfile: (p: UserProfile) => void }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempProfile, setTempProfile] = useState(userProfile);
+
+  const handleSave = () => {
+    onUpdateProfile(tempProfile);
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="space-y-8 pb-24 text-center">
+      <header className="relative inline-block mt-4">
+        <div className="w-32 h-32 rounded-full p-1 border-2 border-[#BBF246] relative mx-auto">
+          <img src={userProfile.avatar} alt="Profile" className="w-full h-full object-cover rounded-full grayscale" />
+          <button className="absolute bottom-0 right-0 p-2 bg-[#BBF246] rounded-full text-black hover:scale-110 transition-transform">
+            <Camera size={16} />
+          </button>
+        </div>
+        {isEditing ? (
+          <input
+            value={tempProfile.name}
+            onChange={(e) => setTempProfile({ ...tempProfile, name: e.target.value })}
+            className="mt-4 bg-transparent border-b border-[#BBF246] text-2xl font-black text-center text-white outline-none w-full"
+          />
+        ) : (
+          <h2 className="text-2xl font-black mt-4 uppercase italic">{userProfile.name}</h2>
+        )}
+        <p className="text-xs text-[#8e8e93] tracking-widest uppercase">Pro Member</p>
+      </header>
+
+      <div className="grid grid-cols-3 gap-3">
+        {['weight', 'height', 'age'].map((field) => (
+          <GlassCard key={field} className="p-4 flex flex-col items-center justify-center h-24 relative">
+            {isEditing ? (
+              <input
+                value={tempProfile[field as keyof typeof tempProfile] as string} // simple cast for demo
+                onChange={(e) => setTempProfile({ ...tempProfile, [field]: e.target.value })}
+                className="w-full bg-transparent text-2xl font-black text-white text-center outline-none border-b border-white/20 focus:border-[#BBF246]"
+              />
+            ) : (
+              // @ts-ignore
+              <span className="text-2xl font-black text-white">{userProfile[field as keyof typeof userProfile] || '24'}</span>
+            )}
+            <span className="text-[10px] text-[#8e8e93] uppercase font-bold tracking-wider mt-1">
+              {field === 'weight' ? 'KG' : field === 'height' ? 'CM' : 'YRS'}
+            </span>
+          </GlassCard>
+        ))}
+      </div>
+
+      <div className="px-4">
+        {isEditing ? (
+          <NeonButton onClick={handleSave} className="w-full">
+            Save Changes
+          </NeonButton>
+        ) : (
+          <NeonButton onClick={() => { setTempProfile(userProfile); setIsEditing(true); }} variant="secondary" className="w-full">
+            Edit Profile
+          </NeonButton>
+        )}
+      </div>
+
+      <div className="space-y-3 text-left">
+        <h3 className="text-sm font-bold text-[#8e8e93] uppercase tracking-widest ml-1">Settings</h3>
+        <GlassCard className="p-4 flex items-center justify-between cursor-pointer hover:bg-white/5">
+          <div className="flex items-center gap-3">
+            <User size={20} className="text-white" />
+            <span className="font-medium">Account Details</span>
+          </div>
+          <ChevronRight size={16} className="text-[#8e8e93]" />
+        </GlassCard>
+        <GlassCard className="p-4 flex items-center justify-between cursor-pointer hover:bg-white/5">
+          <div className="flex items-center gap-3">
+            <Settings size={20} className="text-white" />
+            <span className="font-medium">Preferences</span>
+          </div>
+          <ChevronRight size={16} className="text-[#8e8e93]" />
+        </GlassCard>
+        <GlassCard className="p-4 flex items-center justify-between cursor-pointer hover:bg-white/5 border-red-500/20">
+          <div className="flex items-center gap-3 text-red-500">
+            <X size={20} />
+            <span className="font-bold">Log Out</span>
+          </div>
+        </GlassCard>
+      </div>
+    </div>
+  );
+};
+
 // --- MAIN PAGE COMPONENT ---
 
 export default function Home() {
@@ -247,6 +559,19 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isWatchConnected, setIsWatchConnected] = useState(false);
   const [isWatchModalOpen, setIsWatchModalOpen] = useState(false);
+
+  // Lifted User State
+  const [userProfile, setUserProfile] = useState<any>({
+    name: 'Pranav',
+    email: 'pranav@example.com',
+    phone: '',
+    height: '182',
+    weight: '80.2',
+    age: '24', // Added age field
+    avatar: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=400',
+    publicProfile: true,
+    notifications: true
+  });
 
   useEffect(() => setIsMounted(true), []);
 
@@ -257,7 +582,7 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {activeTab === 'dashboard' && (
           <Dashboard
-            userName="Pranav"
+            userName={userProfile.name} // Use dynamic name
             streak={12}
             heartRate={72}
             isWatchConnected={isWatchConnected}
@@ -267,7 +592,13 @@ export default function Home() {
           />
         )}
         {activeTab === 'library' && <ExerciseLibrary />}
-        {/* Placeholder for other tabs */}
+        {activeTab === 'history' && <History />}
+        {activeTab === 'profile' && (
+          <Profile
+            userProfile={userProfile}
+            onUpdateProfile={setUserProfile}
+          />
+        )}
       </AnimatePresence>
 
       {/* Floating Dock Navigation */}
@@ -284,8 +615,8 @@ export default function Home() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`relative flex items-center justify-center transition-all ${tab.isMain
-                  ? 'w-16 h-16 bg-[#BBF246] rounded-full text-black shadow-[0_0_30px_-5px_#BBF246] hover:scale-110 active:scale-95 -mt-8'
-                  : `w-12 h-12 rounded-full hover:bg-white/10 ${activeTab === tab.id ? 'text-[#BBF246] bg-white/5' : 'text-[#8e8e93]'}`
+                ? 'w-16 h-16 bg-[#BBF246] rounded-full text-black shadow-[0_0_30px_-5px_#BBF246] hover:scale-110 active:scale-95 -mt-8'
+                : `w-12 h-12 rounded-full hover:bg-white/10 ${activeTab === tab.id ? 'text-[#BBF246] bg-white/5' : 'text-[#8e8e93]'}`
                 }`}
             >
               <tab.icon size={tab.isMain ? 28 : 22} strokeWidth={tab.isMain ? 2.5 : 2} />
