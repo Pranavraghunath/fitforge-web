@@ -22,7 +22,10 @@ import {
   Music,
   Settings,
   Timer as TimerIcon,
-  Plus
+  Plus,
+  Play,
+  Pause,
+  RotateCcw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
@@ -35,7 +38,7 @@ const GLASS_BORDER = 'rgba(255, 255, 255, 0.08)';
 
 // --- COMPONENTS ---
 
-const GlassCard = ({ children, className, onClick, ...props }: { children: React.ReactNode, className?: string, onClick?: () => void, [key: string]: any }) => (
+const GlassCard = ({ children, className, onClick, ...props }: { children: React.ReactNode, className?: string, onClick?: React.MouseEventHandler<HTMLDivElement>, [key: string]: any }) => (
   <motion.div
     whileHover={{ scale: 1.01 }}
     whileTap={{ scale: 0.98 }}
@@ -247,13 +250,106 @@ const ROUTINES = [
 
 const DIET_PLAN = [{ day: "Day 1", label: "Mon", meals: { breakfast: "Oats & Berries", lunch: "Grilled Chicken Salad", dinner: "Quinoa Bowl" } }];
 
+const ActivityStats = () => {
+  const [view, setView] = useState('Week');
+
+  const weeklyData = [
+    { name: 'Mon', kcal: 2400 },
+    { name: 'Tue', kcal: 1398 },
+    { name: 'Wed', kcal: 9800 },
+    { name: 'Thu', kcal: 3908 },
+    { name: 'Fri', kcal: 4800 },
+    { name: 'Sat', kcal: 3800 },
+    { name: 'Sun', kcal: 4300 },
+  ];
+
+  return (
+    <div className="space-y-6 pb-24">
+      <header className="flex justify-between items-center">
+        <h1 className="text-3xl font-black uppercase italic">Activity <span style={{ color: NEON_LIME }}>Stats</span></h1>
+        <div className="flex bg-[#1a1a1a] rounded-xl p-1 border border-white/10">
+          {['Day', 'Week', 'Month'].map((v) => (
+            <button
+              key={v}
+              onClick={() => setView(v)}
+              className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all ${view === v ? `bg-[${NEON_LIME}] text-black shadow-lg` : 'text-[#8e8e93]'}`}
+              style={view === v ? { backgroundColor: NEON_LIME } : {}}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      {/* Step Counter Hero */}
+      <GlassCard className="p-8 relative overflow-hidden">
+        <div className="flex justify-between items-center relative z-10">
+          <div>
+            <p className="text-[#8e8e93] text-xs font-bold uppercase tracking-widest mb-1">Steps Today</p>
+            <h2 className="text-6xl font-black text-white tracking-tighter">8,432</h2>
+            <p className="text-[#BBF246] text-sm font-bold mt-2 flex items-center gap-1">
+              <TrendingUp size={16} /> +12% vs Yesterday
+            </p>
+          </div>
+          <div className="w-24 h-24 relative">
+            <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+              <path className="text-white/10" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="4" />
+              <path className="text-[#BBF246]" strokeDasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="4" />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-xs font-black">75%</span>
+            </div>
+          </div>
+        </div>
+        <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-[#BBF246]/10 rounded-full blur-3xl pointer-events-none" />
+      </GlassCard>
+
+      {/* Calories Chart */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-bold">Calories Burned</h3>
+        <GlassCard className="h-64 p-4 border-[#BBF246]/20">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={weeklyData}>
+              <defs>
+                <linearGradient id="colorKcal" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#BBF246" stopOpacity={0.5} />
+                  <stop offset="95%" stopColor="#BBF246" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Tooltip
+                contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '12px', color: '#fff' }}
+                itemStyle={{ color: '#BBF246' }}
+              />
+              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#666' }} dy={10} />
+              <Area type="monotone" dataKey="kcal" stroke="#BBF246" strokeWidth={3} fillOpacity={1} fill="url(#colorKcal)" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </GlassCard>
+      </div>
+
+      {/* Grid Stats */}
+      <div className="grid grid-cols-2 gap-4">
+        <GlassCard className="p-4">
+          <p className="text-[10px] text-[#8e8e93] font-bold uppercase mb-1">Distance</p>
+          <h3 className="text-2xl font-black">5.2 <span className="text-xs font-medium text-[#8e8e93]">KM</span></h3>
+        </GlassCard>
+        <GlassCard className="p-4">
+          <p className="text-[10px] text-[#8e8e93] font-bold uppercase mb-1">Floors</p>
+          <h3 className="text-2xl font-black">12 <span className="text-xs font-medium text-[#8e8e93]">FLR</span></h3>
+        </GlassCard>
+      </div>
+    </div>
+  );
+};
+
 // --- SECTIONS ---
 
-const Dashboard = ({ userName, streak, timerSeconds, isTimerActive, heartRate, isWatchConnected, onConnectWatch, onStartWorkout, onOpenProgress }: any) => {
+const Dashboard = ({ userName, streak, timerSeconds, isTimerActive, heartRate, isWatchConnected, onConnectWatch, onStartWorkout, onOpenProgress, onOpenActivity }: any) => {
   const formatTime = (total: number) => `${Math.floor(total / 60).toString().padStart(2, '0')}:${(total % 60).toString().padStart(2, '0')}`;
 
   const [greeting, setGreeting] = useState('');
   const [quote, setQuote] = useState('');
+  const [isScanning, setIsScanning] = useState(false);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -270,6 +366,18 @@ const Dashboard = ({ userName, streak, timerSeconds, isTimerActive, heartRate, i
     ];
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
   }, []);
+
+  const handleWatchClick = () => {
+    if (!isWatchConnected) {
+      setIsScanning(true);
+      setTimeout(() => {
+        setIsScanning(false);
+        onConnectWatch();
+      }, 2000); // Simulated scan time
+    } else {
+      onConnectWatch(); // Disconnect
+    }
+  };
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-32">
@@ -309,28 +417,31 @@ const Dashboard = ({ userName, streak, timerSeconds, isTimerActive, heartRate, i
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-2 gap-4">
-        <GlassCard onClick={onConnectWatch} className="p-6 flex flex-col justify-between h-48 cursor-pointer group">
+        <GlassCard onClick={handleWatchClick} className="p-6 flex flex-col justify-between h-48 cursor-pointer group">
           <div className="flex justify-between items-start">
-            <div className={`p-3 rounded-2xl ${isWatchConnected ? 'bg-[#BBF246] text-black' : 'bg-white/5 text-[#8e8e93]'}`}>
-              <Watch size={24} />
+            <div className={`p-3 rounded-2xl ${isWatchConnected ? 'bg-[#BBF246] text-black' : isScanning ? 'bg-orange-500 text-white animate-pulse' : 'bg-white/5 text-[#8e8e93]'}`}>
+              {isScanning ? <Bluetooth size={24} className="animate-spin" /> : <Watch size={24} />}
             </div>
             {isWatchConnected && <div className="w-2 h-2 bg-[#BBF246] rounded-full animate-pulse shadow-[0_0_10px_#BBF246]" />}
           </div>
           <div>
-            <p className="text-[10px] font-bold text-[#8e8e93] uppercase tracking-widest mb-1">Heart Rate</p>
-            <h3 className="text-3xl font-black text-white">{isWatchConnected ? heartRate : '--'} <span className="text-sm text-[#8e8e93] font-medium">BPM</span></h3>
+            <p className="text-[10px] font-bold text-[#8e8e93] uppercase tracking-widest mb-1">{isScanning ? 'SCANNING...' : 'Heart Rate'}</p>
+            <h3 className="text-3xl font-black text-white">{isScanning ? '...' : isWatchConnected ? heartRate : '--'} <span className="text-sm text-[#8e8e93] font-medium">{!isScanning && 'BPM'}</span></h3>
           </div>
         </GlassCard>
 
-        <GlassCard className="p-6 flex flex-col justify-between h-48">
+        <GlassCard onClick={onOpenActivity} className="p-6 flex flex-col justify-between h-48 cursor-pointer hover:bg-white/5 transition-all">
           <div className="flex justify-between items-start">
             <div className="p-3 rounded-2xl bg-purple-500/20 text-purple-400">
               <Zap size={24} />
             </div>
+            <div className="p-2 bg-white/5 rounded-full">
+              <ChevronRight size={16} className="text-[#8e8e93]" />
+            </div>
           </div>
           <div>
-            <p className="text-[10px] font-bold text-[#8e8e93] uppercase tracking-widest mb-1">Activity</p>
-            <h3 className="text-3xl font-black text-white">842 <span className="text-sm text-[#8e8e93] font-medium">KCAL</span></h3>
+            <p className="text-[10px] font-bold text-[#8e8e93] uppercase tracking-widest mb-1">Today's Activity</p>
+            <h3 className="text-3xl font-black text-white">8,432 <span className="text-sm text-[#8e8e93] font-medium">STEPS</span></h3>
           </div>
         </GlassCard>
       </div>
@@ -552,6 +663,306 @@ const Profile = ({ userProfile, onUpdateProfile }: { userProfile: UserProfile, o
   );
 };
 
+const Track = ({ onUpdateProfile, userProfile }: { onUpdateProfile: any, userProfile: any }) => {
+  const [water, setWater] = useState(0);
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [weightInput, setWeightInput] = useState(userProfile.weight);
+  const [mealInput, setMealInput] = useState('');
+  const [timer, setTimer] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+
+  useEffect(() => {
+    let interval: any;
+    if (isTimerRunning) {
+      interval = setInterval(() => setTimer(t => t + 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isTimerRunning]);
+
+  const saveWeight = () => {
+    onUpdateProfile({ ...userProfile, weight: weightInput });
+    setActiveModal(null);
+  };
+
+  const formatTimer = (s: number) => {
+    const mins = Math.floor(s / 60).toString().padStart(2, '0');
+    const secs = (s % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  };
+
+  return (
+    <div className="space-y-8 pb-24 relative">
+      <header>
+        <h1 className="text-3xl font-black uppercase italic">Quick <span style={{ color: NEON_LIME }}>Track</span></h1>
+        <p className="text-[#8e8e93] text-xs font-bold tracking-widest uppercase mt-1">Log your progress</p>
+      </header>
+
+      <div className="grid grid-cols-2 gap-4">
+        {/* Water Tracker */}
+        <GlassCard className="col-span-2 p-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
+              <Utensils size={24} />
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-white">{water * 250}ml</h3>
+              <p className="text-[10px] text-[#8e8e93] uppercase font-bold tracking-wider">Water Intake</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <NeonButton onClick={() => setWater(Math.max(0, water - 1))} variant="secondary" className="px-3 py-2 rounded-xl"> - </NeonButton>
+            <NeonButton onClick={() => setWater(water + 1)} className="px-3 py-2 rounded-xl"> + </NeonButton>
+          </div>
+        </GlassCard>
+
+        {/* Quick Actions Grid */}
+        <GlassCard onClick={() => setActiveModal('weight')} className="p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/5 group transition-all">
+          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#BBF246] group-hover:text-black transition-all">
+            <Activity size={24} />
+          </div>
+          <span className="font-bold text-sm">Log Weight</span>
+        </GlassCard>
+
+        <GlassCard onClick={() => setActiveModal('meal')} className="p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/5 group transition-all">
+          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#BBF246] group-hover:text-black transition-all">
+            <Utensils size={24} />
+          </div>
+          <span className="font-bold text-sm">Add Meal</span>
+        </GlassCard>
+
+        <GlassCard onClick={() => setActiveModal('photo')} className="p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/5 group transition-all">
+          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#BBF246] group-hover:text-black transition-all">
+            <Camera size={24} />
+          </div>
+          <span className="font-bold text-sm">Photo</span>
+        </GlassCard>
+
+        <GlassCard onClick={() => setActiveModal('timer')} className="p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/5 group transition-all">
+          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#BBF246] group-hover:text-black transition-all">
+            <TimerIcon size={24} />
+          </div>
+          <span className="font-bold text-sm">Timer</span>
+        </GlassCard>
+      </div>
+
+
+      {/* MODALS */}
+      <AnimatePresence>
+        {activeModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-6" onClick={() => setActiveModal(null)}>
+            <GlassCard className="w-full max-w-sm p-6 space-y-4" onClick={(e) => { e.stopPropagation(); }}>
+
+              {activeModal === 'weight' && (
+                <>
+                  <h3 className="text-xl font-bold uppercase italic">Update Weight</h3>
+                  <input
+                    type="number"
+                    value={weightInput}
+                    onChange={(e) => setWeightInput(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-2xl font-black text-center text-white outline-none focus:border-[#BBF246]"
+                  />
+                  <NeonButton onClick={saveWeight} className="w-full">Save Weight</NeonButton>
+                </>
+              )}
+
+              {activeModal === 'meal' && (
+                <>
+                  <h3 className="text-xl font-bold uppercase italic">Log Meal</h3>
+                  <input
+                    value={mealInput}
+                    onChange={(e) => setMealInput(e.target.value)}
+                    placeholder="What did you eat?"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-lg text-white outline-none focus:border-[#BBF246]"
+                  />
+                  <NeonButton onClick={() => setActiveModal(null)} className="w-full">Add Log</NeonButton>
+                </>
+              )}
+
+              {activeModal === 'photo' && (
+                <>
+                  <h3 className="text-xl font-bold uppercase italic">Progress Photo</h3>
+                  <div className="aspect-square rounded-2xl bg-white/5 border-2 border-dashed border-white/10 flex flex-col items-center justify-center text-[#8e8e93] hover:border-[#BBF246] hover:text-[#BBF246] transition-all cursor-pointer">
+                    <Camera size={48} className="mb-2" />
+                    <span className="text-xs font-bold uppercase tracking-widest">Tap to Upload</span>
+                    <input type="file" className="opacity-0 absolute inset-0 cursor-pointer" />
+                  </div>
+                  <NeonButton onClick={() => setActiveModal(null)} className="w-full">Save Photo</NeonButton>
+                </>
+              )}
+
+              {activeModal === 'timer' && (
+                <div className="text-center space-y-6">
+                  <h3 className="text-xl font-bold uppercase italic">Rest Timer</h3>
+                  <div className="text-7xl font-black tabular-nums tracking-tighter">{formatTimer(timer)}</div>
+                  <div className="flex gap-2 justify-center">
+                    <button onClick={() => setIsTimerRunning(!isTimerRunning)} className={`p-4 rounded-full ${isTimerRunning ? 'bg-red-500/20 text-red-500' : 'bg-[#BBF246] text-black'}`}>
+                      {isTimerRunning ? <Pause size={24} /> : <Play size={24} />}
+                    </button>
+                    <button onClick={() => { setIsTimerRunning(false); setTimer(0); }} className="p-4 rounded-full bg-white/10 text-white">
+                      <RotateCcw size={24} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+            </GlassCard>
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const Diet = () => {
+  return (
+    <div className="space-y-6 pb-24">
+      <header className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-black uppercase italic">Nutrition <span style={{ color: NEON_LIME }}>Plan</span></h1>
+          <p className="text-[#8e8e93] text-xs font-bold tracking-widest uppercase mt-1">Fuel for growth</p>
+        </div>
+        <span className="text-[10px] bg-[#BBF246] text-black px-3 py-1 rounded-full font-black tracking-wider">LEANING</span>
+      </header>
+
+      <div className="space-y-4">
+        {[
+          { time: '8:00 - 9:00 AM', meal: 'Breakfast', items: 'Oat Meal Porridge + 4 Egg Whites' },
+          { time: '11:00 AM - 12:00 PM', meal: 'Mid Morning', items: 'Papaya (1 Bowl)' },
+          { time: '2:00 - 3:00 PM', meal: 'Lunch', items: '2 Roti + Brown Rice + Dal/Chicken/Fish + Salad + Curd' },
+          { time: '5:00 - 6:00 PM', meal: 'Evening Snacks', items: 'Green Tea with Almonds' },
+          { time: '8:00 - 9:00 PM', meal: 'Dinner', items: 'Seasonal Vegetables + Sprouts + Veg Salad' },
+          { time: '10:00 PM', meal: 'Bed Time', items: 'Toned Milk' },
+        ].map((item, i) => (
+          <GlassCard key={i} className="p-4 flex gap-4 group hover:bg-white/5 transition-all">
+            <div className="flex flex-col items-center justify-center w-16 shrink-0 border-r border-white/10 pr-4">
+              <span className="text-[10px] text-[#BBF246] font-bold text-center leading-tight">{item.time.split('-')[0]}</span>
+              <div className="w-1 h-8 bg-white/10 rounded-full my-1 group-hover:bg-[#BBF246] transition-colors" />
+            </div>
+            <div>
+              <h4 className="text-white font-bold uppercase italic text-sm mb-1">{item.meal}</h4>
+              <p className="text-xs text-[#8e8e93] font-medium leading-relaxed">{item.items}</p>
+            </div>
+          </GlassCard>
+        ))}
+
+        <div className="grid grid-cols-2 gap-3 mt-4">
+          <GlassCard className="p-3 bg-[#BBF246]/10 border-[#BBF246]/20">
+            <p className="text-[10px] font-bold text-[#BBF246] uppercase mb-1">Pre-Workout</p>
+            <p className="text-xs text-white">2 Banana or 1 Apple</p>
+          </GlassCard>
+          <GlassCard className="p-3 bg-blue-500/10 border-blue-500/20">
+            <p className="text-[10px] font-bold text-blue-400 uppercase mb-1">Post-Workout</p>
+            <p className="text-xs text-white">2 Scoops Whey Isolate</p>
+          </GlassCard>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MusicPlayer = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [trackIndex, setTrackIndex] = useState(0);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  const tracks = [
+    { title: "Gym Phonk 2024", artist: "Beast Mode", url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3" }, // High energy placeholder
+    { title: "Hardstyle Grind", artist: "Zyzz Legacy", url: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8907f1854.mp3" },
+    { title: "Focus Power", artist: "Iron Will", url: "https://cdn.pixabay.com/download/audio/2022/11/22/audio_febc508520.mp3" }
+  ];
+
+  const togglePlay = (e: any) => {
+    e.stopPropagation();
+    if (isPlaying) {
+      audioRef.current?.pause();
+    } else {
+      audioRef.current?.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const nextTrack = (e: any) => {
+    e.stopPropagation();
+    setTrackIndex((prev) => (prev + 1) % tracks.length);
+    setIsPlaying(true);
+    // Timeout to allow ref to update source
+    setTimeout(() => audioRef.current?.play(), 100);
+  };
+
+  return (
+    <>
+      <audio ref={audioRef} src={tracks[trackIndex].url} loop onEnded={() => setTrackIndex(i => (i + 1) % tracks.length)} />
+
+      <motion.div
+        layout
+        initial={false}
+        animate={isExpanded ? { width: 300, height: 'auto', borderRadius: 24 } : { width: 60, height: 60, borderRadius: 30 }}
+        className="absolute bottom-28 right-4 z-[60] bg-black/80 backdrop-blur-2xl border border-[#BBF246]/30 overflow-hidden shadow-[0_0_30px_-5px_rgba(187,242,70,0.3)]"
+        onClick={() => !isExpanded && setIsExpanded(true)}
+      >
+        <div className="relative h-full flex flex-col">
+          {/* Minimized State */}
+          {!isExpanded && (
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center cursor-pointer"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <div className={`absolute inset-0 bg-[#BBF246]/20 rounded-full ${isPlaying ? 'animate-ping' : ''}`} />
+              <Music size={24} className={isPlaying ? 'text-[#BBF246] animate-pulse' : 'text-white'} />
+            </motion.div>
+          )}
+
+          {/* Expanded State */}
+          {isExpanded && (
+            <div className="p-5 flex flex-col gap-4">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#BBF246] animate-pulse" />
+                  <span className="text-[10px] font-black text-[#BBF246] tracking-widest uppercase">Now Playing</span>
+                </div>
+                <button onClick={(e) => { e.stopPropagation(); setIsExpanded(false); }} className="p-1 hover:bg-white/10 rounded-full">
+                  <X size={16} className="text-white/50" />
+                </button>
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="text-white font-black text-lg leading-tight">{tracks[trackIndex].title}</h3>
+                <p className="text-[#8e8e93] text-xs font-bold uppercase">{tracks[trackIndex].artist}</p>
+              </div>
+
+              {/* Visualizer Bars */}
+              <div className="flex items-end justify-between h-8 gap-1 opacity-80">
+                {[...Array(12)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    animate={isPlaying ? { height: [5, 24, 8, 32, 12, 5] } : { height: 4 }}
+                    transition={{ repeat: Infinity, duration: 0.5 + Math.random() * 0.5, ease: "linear" }}
+                    className="w-1.5 bg-[#BBF246] rounded-full"
+                  />
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between mt-2">
+                <button onClick={e => e.stopPropagation()} className="bg-white/5 border border-white/10 p-3 rounded-full hover:bg-white/10 active:scale-95 transition-all">
+                  <RotateCcw size={18} className="text-white" />
+                </button>
+                <button onClick={togglePlay} className="bg-[#BBF246] p-4 rounded-full text-black hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_#BBF246]">
+                  {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" />}
+                </button>
+                <button onClick={nextTrack} className="bg-white/5 border border-white/10 p-3 rounded-full hover:bg-white/10 active:scale-95 transition-all">
+                  <ChevronRight size={18} className="text-white" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </>
+  );
+};
+
 // --- MAIN PAGE COMPONENT ---
 
 export default function Home() {
@@ -578,7 +989,10 @@ export default function Home() {
   if (!isMounted) return <div className="min-h-screen bg-black" />;
 
   return (
-    <main className="max-w-md mx-auto min-h-screen bg-black text-white px-6 py-8 selection:bg-[#BBF246] selection:text-black">
+    <main className="max-w-md mx-auto min-h-screen bg-black text-white px-6 py-8 selection:bg-[#BBF246] selection:text-black relative">
+      {/* Music Player Overlay */}
+      <MusicPlayer />
+
       <AnimatePresence mode="wait">
         {activeTab === 'dashboard' && (
           <Dashboard
@@ -588,10 +1002,14 @@ export default function Home() {
             isWatchConnected={isWatchConnected}
             onConnectWatch={() => setIsWatchModalOpen(true)}
             onStartWorkout={() => setActiveTab('library')}
-            onOpenProgress={() => { }}
+            onOpenProgress={() => setActiveTab('profile')}
+            onOpenActivity={() => setActiveTab('activity')}
           />
         )}
         {activeTab === 'library' && <ExerciseLibrary />}
+        {activeTab === 'diet' && <Diet />}
+        {activeTab === 'activity' && <ActivityStats />}
+        {activeTab === 'track' && <Track userProfile={userProfile} onUpdateProfile={setUserProfile} />}
         {activeTab === 'history' && <History />}
         {activeTab === 'profile' && (
           <Profile
@@ -608,14 +1026,14 @@ export default function Home() {
             { id: 'dashboard', icon: LayoutDashboard },
             { id: 'library', icon: Library },
             { id: 'track', icon: PlusCircle, isMain: true },
+            { id: 'diet', icon: Utensils },
             { id: 'history', icon: HistoryIcon },
-            { id: 'profile', icon: User },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`relative flex items-center justify-center transition-all ${tab.isMain
-                ? 'w-16 h-16 bg-[#BBF246] rounded-full text-black shadow-[0_0_30px_-5px_#BBF246] hover:scale-110 active:scale-95 -mt-8'
+                ? 'w-16 h-16 bg-[#BBF246] rounded-full text-black shadow-[0_0_30px_-5px_#BBF246] hover:scale-110 active:scale-95 -mt-8 mx-1'
                 : `w-12 h-12 rounded-full hover:bg-white/10 ${activeTab === tab.id ? 'text-[#BBF246] bg-white/5' : 'text-[#8e8e93]'}`
                 }`}
             >
@@ -631,7 +1049,7 @@ export default function Home() {
       {/* Watch Modal Placeholder */}
       {isWatchModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm" onClick={() => setIsWatchModalOpen(false)}>
-          <GlassCard className="p-8 w-80 text-center" onClick={(e: any) => e.stopPropagation()}>
+          <GlassCard className="p-8 w-80 text-center" onClick={(e: any) => { e.stopPropagation(); }}>
             <Watch size={48} className="mx-auto mb-4 text-[#BBF246]" />
             <h2 className="text-xl font-bold mb-4">Sync Device</h2>
             <NeonButton onClick={() => { setIsWatchConnected(!isWatchConnected); setIsWatchModalOpen(false); }}>

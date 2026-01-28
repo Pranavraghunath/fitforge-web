@@ -5,8 +5,13 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "2 Be Fit | Premium Fitness Tracker",
-  description: "Track your workouts, diet, and progress with 2 Be Fit.",
+  title: "FitForge | Premium Fitness Tracker",
+  description: "Track your workouts, diet, and progress with FitForge.",
+  manifest: "/manifest.json",
+};
+
+export const viewport = {
+  themeColor: "#BBF246",
 };
 
 export default function RootLayout({

@@ -1,0 +1,21 @@
+{
+    "name": "FitForge Web",
+    "short_name": "FitForge",
+    "description": "Forge your ultimate physique with FitForge.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#050505",
+    "theme_color": "#BBF246",
+    "icons": [
+        {
+            "src": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=192",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=512",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
